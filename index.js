@@ -98,24 +98,7 @@ app.get('/webhook', (req, res) => {
 function handleMessage(sender_psid, message) {
     // check if it is a location message
     console.log('handleMEssage message:', JSON.stringify(message));
-
-    const locationAttachment = message && message.attachments && message.attachments.find(a => a.type === 'location');
-    const coordinates = locationAttachment && locationAttachment.payload && locationAttachment.payload.coordinates;
-
-    if (coordinates && !isNaN(coordinates.lat) && !isNaN(coordinates.long)) {
-        handleMessageWithLocationCoordinates(sender_psid, coordinates.lat, coordinates.long);
-        return;
-    } else if (message.nlp && message.nlp.entities && message.nlp.entities.location && message.nlp.entities.location.find(g => g.confidence > 0.8 && g.suggested)) {
-        const locationName = message.nlp.entities.location.find(loc => loc.confidence > 0.8 && loc.suggested);
-        if (locationName.value) {
-            const locationNameEncoded = encodeURIComponent(locationName.value);
-            callGeocodingApi(locationNameEncoded, sender_psid, handleConfirmLocation);
-        }
-        return;
-    } else if (message.nlp && message.nlp.entities && message.nlp.entities.greetings && message.nlp.entities.greetings.find(g => g.confidence > 0.8 && g.value === 'true')) {
-        handlePostback(sender_psid, { payload: GREETING });
-        return;
-    }
+    handlePostback(sender_psid, { payload: GREETING });
 }
 
 function handleConfirmLocation(sender_psid, geocoding_location, geocoding_formattedAddr) {
@@ -414,8 +397,8 @@ function updatePreference(sender_psid, perference, callback) {
 function handlePostback(sender_psid, received_postback) {
     // Get the payload for the postback
     const payload = received_postback.payload;
-
-    // Set the response and udpate db based on the postback payload
+    print(payload)
+        // Set the response and udpate db based on the postback payload
     switch (payload) {
         case START_SEARCH_YES:
             updateStatus(sender_psid, payload, handleStartSearchYesPostback);
