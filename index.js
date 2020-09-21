@@ -397,8 +397,8 @@ function updatePreference(sender_psid, perference, callback) {
 function handlePostback(sender_psid, received_postback) {
     // Get the payload for the postback
     const payload = received_postback.payload;
-    print('Payload type: ', payload)
-    print(payload)
+    console.log('Payload type: ', payload)
+    console.log(payload)
         // Set the response and udpate db based on the postback payload
     switch (payload) {
         case START_SEARCH_YES:
